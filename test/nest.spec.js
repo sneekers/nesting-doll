@@ -285,5 +285,85 @@ describe('Nest', function () {
 
     });
 
+    it('does not conflate separate nests', function (done) {
+      var called = 0;
+      function reallyDone() {
+        called += 1;
+        if (called === 3) {
+          done();
+        }
+      }
+
+      var nestTwo = new Nest(namespace, 'bar');
+      var nestThree = new Nest(namespace, 'test');
+
+      nest.run(function () {
+        expect(nest._outer).to.not.exist;
+        expect(nest._previous).to.not.exist;
+
+        setTimeout(function () {
+          nestTwo.run(function () {
+            expect(nestTwo._outer).to.equal(nest);
+            expect(nestTwo._previous).to.equal(nest);
+
+            nestThree.run(function () {
+              expect(nestThree._outer).to.equal(nest);
+              expect(nestThree._previous).to.equal(nestTwo);
+              reallyDone();
+            });
+          });
+        }, 10);
+      });
+
+      process.nextTick(function () {
+        var nest = new Nest(namespace, 'foo');
+        var nestTwo = new Nest(namespace, 'bar');
+        var nestThree = new Nest(namespace, 'test');
+
+        nestThree.run(function () {
+          expect(nestThree._outer).to.not.exist;
+          expect(nestThree._previous).to.not.exist;
+
+          nestTwo.run(function () {
+            expect(nestTwo._outer).to.equal(nestThree);
+            expect(nestTwo._previous).to.equal(nestThree);
+
+            nest.run(function () {
+              expect(nest._outer).to.equal(nestThree);
+              expect(nest._previous).to.equal(nestTwo);
+              reallyDone();
+            });
+          });
+        });
+      });
+
+      process.nextTick(function () {
+        var nest = new Nest(namespace, 'foo');
+        var nestTwo = new Nest(namespace, 'bar');
+        var nestThree = new Nest(namespace, 'test');
+
+        nestThree.run(function () {
+          expect(nestThree._outer).to.not.exist;
+          expect(nestThree._previous).to.not.exist;
+
+          process.nextTick(function () {
+            nestTwo.run(function () {
+              expect(nestTwo._outer).to.equal(nestThree);
+              expect(nestTwo._previous).to.equal(nestThree);
+
+              setTimeout(function () {
+                nest.run(function () {
+                  expect(nest._outer).to.equal(nestThree);
+                  expect(nest._previous).to.equal(nestTwo);
+                  reallyDone();
+                });
+              }, 0);
+            });
+          });
+        });
+      });
+
+    });
+
   });
 });
