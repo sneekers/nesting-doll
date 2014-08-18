@@ -13,50 +13,51 @@ var Events = require('events');
 var cls = require('continuation-local-storage');
 
 var NestingDoll = require('../');
-var Nest = require('../lib/nest');
+var Doll = require('../lib/doll');
 
 describe('NestingDoll', function () {
-  var doll;
+  var nestingDoll;
 
   beforeEach(function (done) {
-    doll = NestingDoll.getDoll();
+    nestingDoll = NestingDoll.getDoll();
     done();
   });
 
   afterEach(function (done) {
-    // Clear instance
-    doll = NestingDoll.INSTANCE = null;
+    nestingDoll = null;
     done();
+  });
+
+  describe('constructor', function () {
+
+    it('initializes the main CLS namespace', function (done) {
+      expect(nestingDoll._namespace)
+        .to.exist.and
+        .to.equal(cls.getNamespace(NestingDoll.NAMESPACE));
+      done();
+    });
+
+    it('returns an instance with the same namespace', function (done) {
+      var nestingDollTwo = new NestingDoll();
+
+      expect(nestingDollTwo).to.exist;
+      expect(nestingDollTwo._namespace).to.equal(nestingDoll._namespace);
+      done();
+    });
+
+    it('is an instance of EventEmitter', function (done) {
+      expect(nestingDoll).to.be.instanceOf(Events.EventEmitter);
+      done();
+    });
+
   });
 
   describe('getDoll', function () {
 
     it('returns a new instance of NestingDoll', function (done) {
-      expect(doll)
+      expect(nestingDoll)
         .to.exist.and
-        .to.equal(NestingDoll.INSTANCE);
-      done();
-    });
-
-    it('returns the same instance of NestingDoll after subsequent calls', function (done) {
-      var dollTwo = NestingDoll.getDoll();
-
-      expect(dollTwo)
-        .to.exist.and
-        .to.equal(doll).and
-        .to.equal(NestingDoll.INSTANCE);
-      done();
-    });
-
-    it('is an instance of EventEmitter', function (done) {
-      expect(doll).to.be.instanceOf(Events.EventEmitter);
-      done();
-    });
-
-    it('initializes the main CLS namespace', function (done) {
-      expect(doll._namespace)
-        .to.exist.and
-        .to.equal(cls.getNamespace(NestingDoll.NAMESPACE));
+        .to.be.instanceOf(NestingDoll);
       done();
     });
 
@@ -64,10 +65,10 @@ describe('NestingDoll', function () {
 
   describe('nest', function () {
 
-    it('returns a Nest object', function (done) {
-      var nest = doll.nest('foo');
+    it('returns a Doll object', function (done) {
+      var doll = nestingDoll.nest('foo');
 
-      expect(nest).to.be.instanceOf(Nest);
+      expect(doll).to.be.instanceOf(Doll);
       done();
     });
 
@@ -75,11 +76,11 @@ describe('NestingDoll', function () {
       var data = {
         foo: 'bar'
       };
-      var nest = doll.nest('foo', data);
+      var doll = nestingDoll.nest('foo', data);
 
-      expect(nest).to.have.property('namespace', doll._namespace);
-      expect(nest).to.have.property('name', 'foo');
-      expect(nest).to.have.property('data', data);
+      expect(doll).to.have.property('namespace', nestingDoll._namespace);
+      expect(doll).to.have.property('name', 'foo');
+      expect(doll).to.have.property('data', data);
       done();
     });
 
@@ -87,7 +88,7 @@ describe('NestingDoll', function () {
       var res = {
         foo: 'bar'
       };
-      var callback = doll.nest('foo').bind(function (err, data) {
+      var callback = nestingDoll.nest('foo').bind(function (err, data) {
         expect(data).to.equal(res);
         done();
       });
@@ -96,8 +97,7 @@ describe('NestingDoll', function () {
     });
 
     it('supports directly running a function', function (done) {
-      doll.nest('foo').run(function () {
-        expect(true).to.be.true;
+      nestingDoll.nest('foo').run(function () {
         done();
       });
     });

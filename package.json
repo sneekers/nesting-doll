@@ -1,6 +1,6 @@
 {
   "name": "nesting-doll",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Transactional logger using CLS",
   "main": "index.js",
   "scripts": {

@@ -4,35 +4,26 @@ var Events = require('events');
 var util = require('util');
 var cls = require('continuation-local-storage');
 
-var Nest = require('./lib/nest');
-var Utilities = require('./lib/utilities');
+var Doll = require('./lib/doll');
 
-var exports = module.exports = {
-  NAMESPACE: '__NS__nesting_doll',
-  INSTANCE: null,
-
-  Constructor: NestingDoll,
-
-  getDoll: function (options) {
-    if (exports.INSTANCE) {
-      return exports.INSTANCE;
-    }
-
-    var logger = new NestingDoll(options);
-    exports.INSTANCE = logger;
-
-    return logger;
-  }
-};
+var NAMESPACE = '__NS__nesting_doll';
 
 function NestingDoll() {
   Events.EventEmitter.call(this);
   // Get or create namespace for tracking transactions
-  this._namespace = cls.getNamespace(exports.NAMESPACE) || cls.createNamespace(exports.NAMESPACE);
+  this._namespace = cls.getNamespace(NAMESPACE) || cls.createNamespace(NAMESPACE);
 }
 
 util.inherits(NestingDoll, Events.EventEmitter);
 
-NestingDoll.prototype.nest = function (name, data) {
-  return new Nest(this._namespace, name, data);
+NestingDoll.NAMESPACE = NAMESPACE;
+
+NestingDoll.getDoll = function () {
+  return new NestingDoll();
 };
+
+NestingDoll.prototype.nest = function (name, data) {
+  return new Doll(name, this._namespace, data);
+};
+
+module.exports = NestingDoll;
