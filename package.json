@@ -1,0 +1,16 @@
+{
+  "name": "nesting-doll",
+  "version": "0.0.1",
+  "description": "Transactional logger using CLS",
+  "main": "index.js",
+  "scripts": {
+    "test": "./node_modules/.bin/lab test"
+  },
+  "author": "Jacob Chapel <jacob.chapel@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "chai": "^1.9.1",
+    "continuation-local-storage": "^3.1.0",
+    "lab": "^4.0.2"
+  }
+}
