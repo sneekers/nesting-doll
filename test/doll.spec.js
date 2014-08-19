@@ -203,11 +203,11 @@ describe('Doll', function () {
 
     it('sets this doll as previous', function (done) {
       namespace.run(function () {
-        expect(namespace.get(Doll.PREVIOUS)).to.not.exist;
+        expect(namespace.get(Doll.CURRENT)).to.not.exist;
 
         callback();
 
-        expect(namespace.get(Doll.PREVIOUS)).to.equal(doll);
+        expect(namespace.get(Doll.CURRENT)).to.equal(doll);
         done();
       });
     });
@@ -218,7 +218,7 @@ describe('Doll', function () {
           foo: 'bar'
         };
 
-        namespace.set(Doll.PREVIOUS, previous);
+        namespace.set(Doll.CURRENT, previous);
 
         callback();
 

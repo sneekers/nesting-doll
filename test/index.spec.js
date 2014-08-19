@@ -16,8 +16,8 @@ var NestingDoll = require('../');
 var Doll = require('../lib/doll');
 
 describe('NestingDoll', function () {
-  var nestingDoll;
 
+  var nestingDoll;
   beforeEach(function (done) {
     nestingDoll = NestingDoll.getDoll();
     done();
@@ -25,6 +25,7 @@ describe('NestingDoll', function () {
 
   afterEach(function (done) {
     nestingDoll = null;
+    cls.destroyNamespace(NestingDoll.NAMESPACE);
     done();
   });
 
@@ -104,4 +105,32 @@ describe('NestingDoll', function () {
 
   });
 
+  describe('currentDoll', function () {
+
+    it('returns null if namespace is not active', function (done) {
+      expect(nestingDoll.currentDoll()).to.be.null;
+      done();
+    });
+
+    it('returns current doll', function (done) {
+      var doll = nestingDoll.nest('foo');
+      doll.run(function () {
+        expect(nestingDoll.currentDoll()).to.equal(doll);
+        done();
+      });
+    });
+
+    it('returns current nested doll', function (done) {
+      nestingDoll.nest('foo').run(function () {
+        var doll = nestingDoll.nest('bar');
+        process.nextTick(function () {
+          doll.run(function () {
+            expect(nestingDoll.currentDoll()).to.equal(doll);
+            done();
+          });
+        });
+      });
+    });
+
+  });
 });

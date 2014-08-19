@@ -6,7 +6,7 @@ var cls = require('continuation-local-storage');
 
 var Doll = require('./lib/doll');
 
-var NAMESPACE = '__NS__nesting_doll';
+var NAMESPACE = 'nesting-doll';
 
 function NestingDoll() {
   Events.EventEmitter.call(this);
@@ -24,6 +24,14 @@ NestingDoll.getDoll = function () {
 
 NestingDoll.prototype.nest = function (name, data) {
   return new Doll(name, this._namespace, data);
+};
+
+NestingDoll.prototype.currentDoll = function () {
+  if (!this._namespace.active) {
+    return null;
+  }
+
+  return this._namespace.get(Doll.CURRENT);
 };
 
 module.exports = NestingDoll;
