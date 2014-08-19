@@ -1,7 +1,7 @@
 {
   "name": "nesting-doll",
   "version": "0.0.2",
-  "description": "Transactional logger using CLS",
+  "description": "Nested Transaction Library using CLS",
   "main": "index.js",
   "scripts": {
     "test": "./node_modules/.bin/lab test"
