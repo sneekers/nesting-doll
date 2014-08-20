@@ -27,6 +27,36 @@ describe('Doll', function () {
     done();
   });
 
+  describe('clone', function () {
+
+    it('returns empty object if state is undefined', function (done) {
+      expect(Doll.clone()).to.deep.equal({});
+      done();
+    });
+
+    it('returns cloned state', function (done) {
+      var state = {
+        foo: 'bar'
+      };
+      var clonedState = Doll.clone(state);
+      expect(clonedState).to.not.equal(state);
+      expect(clonedState).to.deep.equal(state);
+      done();
+    });
+
+  });
+
+  describe('isDefined', function () {
+
+    it('checks if value is defined and not null', function (done) {
+      expect(Doll.isDefined()).to.be.false;
+      expect(Doll.isDefined(null)).to.be.false;
+      expect(Doll.isDefined(0)).to.be.true;
+      done();
+    });
+
+  });
+
   describe('outer', function () {
 
     it('returns the outer most doll assigned to this doll', function (done) {
@@ -52,6 +82,81 @@ describe('Doll', function () {
       var previousDoll = doll.previous();
 
       expect(previousDoll).to.equal(previous);
+      done();
+    });
+
+  });
+
+  describe('get', function () {
+
+    it('returns null if key is not defined', function (done) {
+      expect(doll.get()).to.be.null;
+      expect(doll.get(null)).to.be.null;
+      done();
+    });
+
+    it('returns value for given key', function (done) {
+      var key = 'foo';
+      var value = 'bar';
+      doll.state[key] = value;
+
+      expect(doll.get(key)).to.equal(value);
+      done();
+    });
+
+  });
+
+  describe('set', function () {
+
+    it('returns null if key is not defined', function (done) {
+      var state = {
+        foo: 'bar'
+      };
+      doll.state = state;
+
+      doll.set();
+      expect(doll.state).to.deep.equal(state);
+
+      doll.set(null);
+      expect(doll.state).to.deep.equal(state);
+      done();
+    });
+
+    it('assigns value for given key', function (done) {
+      var key = 'foo';
+      var value = 'bar';
+
+      doll.set(key, value);
+
+      expect(doll.state[key]).to.equal(value);
+      done();
+    });
+
+  });
+
+  describe('reset', function () {
+    var clone;
+
+    beforeEach(function (done) {
+      clone = Doll.clone;
+      done();
+    });
+
+    afterEach(function (done) {
+      Doll.clone = clone;
+      done();
+    });
+
+    it('calls Doll.clone', function (done) {
+      var state = {
+        foo: 'bar'
+      };
+
+      Doll.clone = function (value) {
+        expect(value).to.equal(state);
+      };
+
+      doll.reset(state);
       done();
     });
 

@@ -9,7 +9,8 @@
   "author": "Jacob Chapel <jacob.chapel@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "continuation-local-storage": "^3.1.0"
+    "continuation-local-storage": "^3.1.0",
+    "hoek": "^2.4.1"
   },
   "devDependencies": {
     "chai": "^1.9.1",

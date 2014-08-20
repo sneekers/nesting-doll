@@ -81,7 +81,9 @@ describe('NestingDoll', function () {
 
       expect(doll).to.have.property('namespace', nestingDoll._namespace);
       expect(doll).to.have.property('name', 'foo');
-      expect(doll).to.have.property('state', state);
+      expect(doll)
+        .to.have.property('state').and
+        .to.deep.equal(state);
       done();
     });
 
