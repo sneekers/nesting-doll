@@ -73,15 +73,15 @@ describe('NestingDoll', function () {
       done();
     });
 
-    it('has set namespace, name and data', function (done) {
-      var data = {
+    it('has set namespace, name and payload', function (done) {
+      var state = {
         foo: 'bar'
       };
-      var doll = nestingDoll.nest('foo', data);
+      var doll = nestingDoll.nest('foo', state);
 
       expect(doll).to.have.property('namespace', nestingDoll._namespace);
       expect(doll).to.have.property('name', 'foo');
-      expect(doll).to.have.property('data', data);
+      expect(doll).to.have.property('state', state);
       done();
     });
 

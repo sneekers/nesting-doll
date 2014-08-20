@@ -68,17 +68,13 @@ describe('Doll', function () {
 
         expect(boundNamespace).to.equal(namespace);
 
-        next(key, value);
-      });
-
-      function next(key, value) {
         var setValue = namespace.get(key);
 
         expect(setValue)
           .to.exist.and
           .to.equal(value);
         done();
-      }
+      });
 
       boundFn('test', 1);
     });
@@ -89,7 +85,7 @@ describe('Doll', function () {
       };
 
       var boundFn = doll.bind(function () {
-        expect(this).to.equal(context);
+        expect(namespace.active).to.equal(context);
         done();
       }, context);
 
@@ -135,17 +131,6 @@ describe('Doll', function () {
           .to.equal(value);
         done();
       }
-    });
-
-    it('binds the given context to the given function', function (done) {
-      var context = {
-        foo: 'bar'
-      };
-
-      doll.run(function () {
-        expect(this).to.equal(context);
-        done();
-      }, context);
     });
 
     it('returns the given functions return value', function (done) {
