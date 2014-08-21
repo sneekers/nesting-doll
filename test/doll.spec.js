@@ -212,6 +212,70 @@ describe('Doll', function () {
 
   });
 
+  describe('rawBind', function () {
+
+    it('binds the given function', function (done) {
+
+      var boundFn = doll.rawBind(function (key, value) {
+        var boundNamespace = cls.getNamespace('foo');
+
+        boundNamespace.set(key, value);
+
+        expect(boundNamespace).to.equal(namespace);
+
+        var setValue = namespace.get(key);
+
+        expect(setValue)
+          .to.exist.and
+          .to.equal(value);
+        done();
+      });
+
+      boundFn('test', 1);
+    });
+
+    it('binds the given context to the given function', function (done) {
+      var context = {
+        foo: 'bar'
+      };
+
+      var boundFn = doll.rawBind(function () {
+        expect(namespace.active).to.equal(context);
+        done();
+      }, context);
+
+      boundFn();
+    });
+
+    it('returns the given functions return value', function (done) {
+      var value = 'bar';
+
+      var boundFn = doll.rawBind(function (value) {
+        return value;
+      });
+
+      var setValue = boundFn(value);
+
+      expect(setValue).to.equal(value);
+      done();
+    });
+
+    it('does not wrap the callback', function (done) {
+      var boundFn = doll.rawBind(function () {
+        expect(doll)
+          .to.have.property('_outer').and
+          .to.be.null;
+        expect(doll)
+          .to.have.property('_previous').and
+          .to.be.null;
+        done();
+      });
+
+      boundFn();
+    });
+
+  });
+
   describe('run', function () {
 
     it('runs the given function', function (done) {
