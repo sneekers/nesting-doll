@@ -1,4 +1,4 @@
-# Nesting Doll [![npm](https://img.shields.io/npm/v/nesting-doll.svg)](https://npmjs.org/package/nesting-doll)
+# Nesting Doll [![travis](https://img.shields.io/travis/sneekers/nesting-doll.svg)](https://travis-ci.org/sneekers/nesting-doll) [![npm](https://img.shields.io/npm/v/nesting-doll.svg)](https://npmjs.org/package/nesting-doll)
 
 This library is a simple component for building nested contexts/scopes
 (leveraging [continuation-local-storage](https://github.com/othiym23/node-continuation-local-storage))
