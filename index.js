@@ -31,7 +31,13 @@ NestingDoll.prototype.currentDoll = function () {
     return null;
   }
 
-  return this._namespace.get(Doll.CURRENT);
+  var current = this._namespace.get(Doll.CURRENT);
+
+  if (!current._active) {
+    return null;
+  }
+
+  return current;
 };
 
 module.exports = NestingDoll;

@@ -1,3 +1,4 @@
+/*jshint expr: true*/
 'use strict';
 
 var Lab = require('lab');
@@ -82,6 +83,26 @@ describe('Doll', function () {
       var previousDoll = doll.previous();
 
       expect(previousDoll).to.equal(previous);
+      done();
+    });
+
+  });
+
+  describe('activate', function () {
+
+    it('sets _active to true', function (done) {
+      doll.activate();
+      expect(doll).to.have.property('_active', true);
+      done();
+    });
+
+  });
+
+  describe('deactivate', function () {
+
+    it('sets _active to false', function (done) {
+      doll.deactivate();
+      expect(doll).to.have.property('_active', false);
       done();
     });
 
@@ -340,10 +361,26 @@ describe('Doll', function () {
       });
     });
 
-    it('sets _outer if outer exists', function (done) {
+    it('ignores _outer if outer exists and is not active', function (done) {
       namespace.run(function () {
         var outer = {
           foo: 'bar'
+        };
+
+        namespace.set(Doll.OUTER, outer);
+
+        callback();
+
+        expect(doll._outer).to.be.null;
+        done();
+      });
+    });
+
+    it('sets _outer if outer exists and is active', function (done) {
+      namespace.run(function () {
+        var outer = {
+          foo: 'bar',
+          _active: true // Need to set _active to be considered active
         };
 
         namespace.set(Doll.OUTER, outer);
@@ -366,10 +403,26 @@ describe('Doll', function () {
       });
     });
 
-    it('sets _previous if previous exists', function (done) {
+    it('ignores _previous if previous exists and is not active', function (done) {
       namespace.run(function () {
         var previous = {
           foo: 'bar'
+        };
+
+        namespace.set(Doll.CURRENT, previous);
+
+        callback();
+
+        expect(doll._previous).to.be.null;
+        done();
+      });
+    });
+
+    it('sets _previous if previous exists and is active', function (done) {
+      namespace.run(function () {
+        var previous = {
+          foo: 'bar',
+          _active: true // Need to set _active to be considered active
         };
 
         namespace.set(Doll.CURRENT, previous);
@@ -389,14 +442,17 @@ describe('Doll', function () {
       var dollTwo = new Doll('bar', namespace);
       var dollThree = new Doll('test', namespace);
 
+      doll.activate();
       doll.run(function () {
         expect(doll._outer).to.not.exist;
         expect(doll._previous).to.not.exist;
 
+        dollTwo.activate();
         dollTwo.run(function () {
           expect(dollTwo._outer).to.equal(doll);
           expect(dollTwo._previous).to.equal(doll);
 
+          dollThree.activate();
           dollThree.run(function () {
             expect(dollThree._outer).to.equal(doll);
             expect(dollThree._previous).to.equal(dollTwo);
@@ -419,15 +475,18 @@ describe('Doll', function () {
       var dollTwo = new Doll('bar', namespace);
       var dollThree = new Doll('test', namespace);
 
+      doll.activate();
       doll.run(function () {
         expect(doll._outer).to.not.exist;
         expect(doll._previous).to.not.exist;
 
         setTimeout(function () {
+          dollTwo.activate();
           dollTwo.run(function () {
             expect(dollTwo._outer).to.equal(doll);
             expect(dollTwo._previous).to.equal(doll);
 
+            dollThree.activate();
             dollThree.run(function () {
               expect(dollThree._outer).to.equal(doll);
               expect(dollThree._previous).to.equal(dollTwo);
@@ -442,15 +501,18 @@ describe('Doll', function () {
         var dollTwo = new Doll('bar', namespace);
         var dollThree = new Doll('test', namespace);
 
+        dollThree.activate();
         dollThree.run(function () {
           expect(dollThree._outer).to.not.exist;
           expect(dollThree._previous).to.not.exist;
 
           setImmediate(function () {
+            dollTwo.activate();
             dollTwo.run(function () {
               expect(dollTwo._outer).to.equal(dollThree);
               expect(dollTwo._previous).to.equal(dollThree);
 
+              doll.activate();
               doll.run(function () {
                 expect(doll._outer).to.equal(dollThree);
                 expect(doll._previous).to.equal(dollTwo);
@@ -466,16 +528,19 @@ describe('Doll', function () {
         var dollTwo = new Doll('bar', namespace);
         var dollThree = new Doll('test', namespace);
 
+        dollThree.activate();
         dollThree.run(function () {
           expect(dollThree._outer).to.not.exist;
           expect(dollThree._previous).to.not.exist;
 
           setTimeout(function () {
+            dollTwo.activate();
             dollTwo.run(function () {
               expect(dollTwo._outer).to.equal(dollThree);
               expect(dollTwo._previous).to.equal(dollThree);
 
               process.nextTick(function () {
+                doll.activate();
                 doll.run(function () {
                   expect(doll._outer).to.equal(dollThree);
                   expect(doll._previous).to.equal(dollTwo);

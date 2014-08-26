@@ -1,3 +1,4 @@
+/*jshint expr: true*/
 'use strict';
 
 var Lab = require('lab');
@@ -114,8 +115,19 @@ describe('NestingDoll', function () {
       done();
     });
 
+    it('returns null if current doll is not active', function (done) {
+      var doll = nestingDoll.nest('foo');
+
+      doll.run(function () {
+        expect(nestingDoll.currentDoll()).to.be.null;
+        done();
+      });
+    });
+
     it('returns current doll', function (done) {
       var doll = nestingDoll.nest('foo');
+
+      doll.activate();
       doll.run(function () {
         expect(nestingDoll.currentDoll()).to.equal(doll);
         done();
@@ -125,6 +137,8 @@ describe('NestingDoll', function () {
     it('returns current nested doll', function (done) {
       nestingDoll.nest('foo').run(function () {
         var doll = nestingDoll.nest('bar');
+
+        doll.activate();
         process.nextTick(function () {
           doll.run(function () {
             expect(nestingDoll.currentDoll()).to.equal(doll);
