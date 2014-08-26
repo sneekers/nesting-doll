@@ -1,11 +1,19 @@
 {
   "name": "nesting-doll",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Nested context library using CLS",
   "main": "index.js",
   "scripts": {
     "test": "lab -t 100 test"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sneekers/nested-doll.git"
+  },
+  "bugs": {
+    "url": "https://github.com/sneekers/nested-doll/issues"
+  },
+  "homepage": "https://github.com/sneekers/nested-doll",
   "author": "Jacob Chapel <jacob.chapel@gmail.com>",
   "license": "MIT",
   "dependencies": {
