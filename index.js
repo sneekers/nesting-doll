@@ -22,8 +22,8 @@ NestingDoll.getDoll = function () {
   return new NestingDoll();
 };
 
-NestingDoll.prototype.nest = function (name, data) {
-  return new Doll(name, this._namespace, data);
+NestingDoll.prototype.nest = function (name, state) {
+  return new Doll(name, this._namespace, state);
 };
 
 NestingDoll.prototype.currentDoll = function () {
