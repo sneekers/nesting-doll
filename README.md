@@ -5,7 +5,7 @@ This library is a simple component for building nested contexts/scopes
 which can be used for things such as a transaction logger. In fact, I build this expressly to be the
 foundation for a nested transaction logger.
 
-It exposes [dolls](https://github.com/sneekers/nested-doll/#new-dollname-namespace-state) which are containers
+It exposes [dolls](https://github.com/sneekers/nesting-doll/#new-dollname-namespace-state) which are containers
 for the current level context. Each **doll** has its own "state" which is specific to that container.
 Each nested doll you create, it tracks the outer most doll and the previous doll, which can be used to track
 the top transaction and the previous transaction as you go down.

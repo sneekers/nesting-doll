@@ -8,12 +8,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/sneekers/nested-doll.git"
+    "url": "https://github.com/sneekers/nesting-doll.git"
   },
   "bugs": {
-    "url": "https://github.com/sneekers/nested-doll/issues"
+    "url": "https://github.com/sneekers/nesting-doll/issues"
   },
-  "homepage": "https://github.com/sneekers/nested-doll",
+  "homepage": "https://github.com/sneekers/nesting-doll",
   "author": "Jacob Chapel <jacob.chapel@gmail.com>",
   "license": "MIT",
   "dependencies": {
