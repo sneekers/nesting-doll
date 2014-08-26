@@ -2,12 +2,12 @@
 
 This library is a simple component for building nested contexts/scopes
 (leveraging [continuation-local-storage](https://github.com/othiym23/node-continuation-local-storage))
-which can be used for things such as a transaction logger. In fact, I build this expressly to be the
+which can be used for things such as a transaction logger. In fact, I built this expressly as the
 foundation for a nested transaction logger.
 
 It exposes [dolls](https://github.com/sneekers/nesting-doll/#new-dollname-namespace-state) which are containers
-for the current level context. Each **doll** has its own "state" which is specific to that container.
-Each nested doll you create, it tracks the outer most doll and the previous doll, which can be used to track
+for the current level context. Each **doll** maintains a "state" specific to that container.
+Each nested doll created tracks the outer most doll and the previous doll, allowing access to
 the top transaction and the previous transaction as you go down.
 
 ## Install
@@ -27,7 +27,7 @@ var nestingDoll = new NestingDoll();
 ```
 
 ### nestingDoll.nest(name, [state])
-Creates new doll with given name and prepopulated with the data given as the dolls state.
+Creates new doll with given name and pre-populated with the data given as the dolls state.
 ```js
 var doll = nestingDoll.nest('foo', {timestamp: Date.now()});
 ```
@@ -76,7 +76,7 @@ var doll = new Doll(name, namespace);
 ```
 
 ### doll.run(function)
-Run is an easy way to directly create a new doll context which any function inside of will have access to.
+Run is an easy way to directly create a new doll context. Any function inside will have access to it.
 ```js
 var doll = nestingDoll.nest('foo');
 
@@ -87,7 +87,7 @@ doll.run(function () {
 ```
 
 ### doll.bind(function, [context])
-Bind allows you to wrap a function so when it is called, the context is created automatically.
+Bind allows you to wrap a function that automatically creates a context when called.
 You can optionally pass in a CLS namespace context, which attaches the doll to that context.
 ```js
 var doll = nestingDoll.nest('foo');
@@ -99,9 +99,8 @@ boundAsyncFn('foo', function (err, value) {
 ```
 
 ### doll.rawBind(function, [context])
-Raw bind is meant to bind a function similarly to doll.bind() above, but does not run the
-doll nesting functionality (which sets outer and previous dolls). This was created specifically
-to assist in binding multiple functions to the same doll context without running the nesting
+Raw bind is similar to `doll.bind()` above but does not run the
+doll nesting functionality (which sets outer and previous dolls). This allows binding multiple functions to the same doll context without running the nesting
 code more than once.
 ```js
 function createTransaction(name, transaction, callback) {
@@ -167,14 +166,13 @@ createTransaction(
 ```
 
 ### doll.previous() or doll.outer()
-Returns the previous or outer most doll based on this current doll.
+Returns the previous or outer most doll relative to this current doll.
 See examples above for usage.
 
 ### doll.activate() or doll.deactivate()
-This activates or deactivates a doll. Dolls are not activated by default, which means
-until you activate the doll, you won't be able to nest any other dolls inside of it.
+This activates or deactivates a doll. Dolls are not active by default. Until you activate the doll you won't be able to nest any other dolls inside of it.
 
-This is useful for explicitly ending a doll based transaction, so subsequent dolls
+This is useful for explicitly ending a doll-based transaction, so subsequent dolls
 that aren't nested but called in the same scope do not polute your nested scope.
 
 ## Credits
