@@ -5,9 +5,10 @@ This library is a simple component for building nested contexts/scopes
 which can be used for things such as a transaction logger. In fact, I build this expressly to be the
 foundation for a nested transaction logger.
 
-It exposes **dolls** which are containers for the current level context. Each **doll** has its own "state"
-which is what is specific to that container. Each nested doll you create, it tracks the outer most doll and
-the previous doll, which can be used to track the top transaction and the previous transaction as you go down.
+It exposes [dolls](https://github.com/sneekers/nested-doll/#new-dollname-namespace-state) which are containers
+for the current level context. Each **doll** has its own "state" which is what is specific to that container.
+Each nested doll you create, it tracks the outer most doll and the previous doll, which can be used to track
+the top transaction and the previous transaction as you go down.
 
 ## Install
 ```sh
@@ -43,7 +44,7 @@ nestingDoll.nest('foo').run(function () {
 function fooCallback(err, value) {
   var doll = nestingDoll.currentDoll();
 
-  console.log(doll.name); // => 'foo'
+  console.log(doll.name);        // => 'foo'
   console.log(doll.get('test')); // => 'value'
 
   nestingDoll.nest('bar').run(function () {
@@ -56,9 +57,9 @@ function fooCallback(err, value) {
 function barCallback(err, value) {
   var doll = nestingDoll.currentDoll();
 
-  console.log(doll.name); // => 'bar'
-  console.log(doll.get('test')); // => undefined
-  console.log(doll.get('pizza')); // => 'Is good!'
+  console.log(doll.name);                   // => 'bar'
+  console.log(doll.get('test'));            // => undefined
+  console.log(doll.get('pizza'));           // => 'Is good!'
   console.log(doll.previous().get('test')); // => 'value'
 }
 ```
@@ -136,7 +137,7 @@ function asyncFn(key, callback) {
       var currentDoll = nestingDoll.currentDoll();
       var previousDoll = currentDoll.previous();
 
-      console.log(currentDoll.name); // => 'db.find'
+      console.log(currentDoll.name);  // => 'db.find'
       console.log(previousDoll.name); // => 'asyncFn'
 
       db.find(key, end);
@@ -157,7 +158,7 @@ createTransaction(
     var previousDoll = currentDoll.previous();
 
     console.log(currentDoll.name); // => 'asyncFn'
-    console.log(previousDoll); // => 'null'
+    console.log(previousDoll);     // => 'null'
   }
 );
 
