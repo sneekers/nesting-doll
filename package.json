@@ -1,6 +1,6 @@
 {
   "name": "nesting-doll",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Nested context library using CLS",
   "main": "index.js",
   "scripts": {
@@ -17,7 +17,7 @@
   "author": "Jacob Chapel <jacob.chapel@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "continuation-local-storage": "^3.1.0",
+    "continuation-local-storage": "^3.1.1",
     "hoek": "^2.4.1"
   },
   "devDependencies": {
