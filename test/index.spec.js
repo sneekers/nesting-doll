@@ -115,6 +115,13 @@ describe('NestingDoll', function () {
       done();
     });
 
+    it('returns null if there is no current doll', function (done) {
+      nestingDoll._namespace.run(function () {
+        expect(nestingDoll.currentDoll()).to.be.null;
+        done();
+      });
+    });
+
     it('returns null if current doll is not active', function (done) {
       var doll = nestingDoll.nest('foo');
 

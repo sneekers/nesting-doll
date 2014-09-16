@@ -33,7 +33,7 @@ NestingDoll.prototype.currentDoll = function () {
 
   var current = this._namespace.get(Doll.CURRENT);
 
-  if (!current._active) {
+  if (!current || !current._active) {
     return null;
   }
 
